@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dccooena2yu5t"
+path="res://.godot/imported/Pix - Space travel.mp3-438115e0e18f29bb614e95c8f593944d.mp3str"
+
+[deps]
+
+source_file="res://sfx/Pix - Space travel.mp3"
+dest_files=["res://.godot/imported/Pix - Space travel.mp3-438115e0e18f29bb614e95c8f593944d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

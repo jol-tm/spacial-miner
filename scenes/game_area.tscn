@@ -1,0 +1,77 @@
+[gd_scene load_steps=8 format=3 uid="uid://bb5pd0q7v2fhb"]
+
+[ext_resource type="Script" path="res://scripts/game_area.gd" id="1_d4ak3"]
+[ext_resource type="Texture2D" uid="uid://coix1e8eqiecj" path="res://sprites/bckg.png" id="2_c8f3y"]
+[ext_resource type="PackedScene" uid="uid://b47rei6tvwdn0" path="res://scenes/player.tscn" id="3_wri5b"]
+[ext_resource type="PackedScene" uid="uid://dpbpyxa8pe0uv" path="res://scenes/planet.tscn" id="4_pnwr4"]
+
+[sub_resource type="Animation" id="Animation_1wwba"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_8w358"]
+resource_name = "anim"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ogf8y"]
+_data = {
+"RESET": SubResource("Animation_1wwba"),
+"anim": SubResource("Animation_8w358")
+}
+
+[node name="game_area" type="Node2D"]
+script = ExtResource("1_d4ak3")
+
+[node name="Parallax2D" type="Parallax2D" parent="."]
+scale = Vector2(0.998328, 1)
+repeat_size = Vector2(320, 320)
+repeat_times = 10
+
+[node name="bckg" type="Sprite2D" parent="Parallax2D"]
+texture_filter = 1
+position = Vector2(331, 183)
+scale = Vector2(5, 5)
+texture = ExtResource("2_c8f3y")
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Parallax2D/bckg"]
+libraries = {
+"": SubResource("AnimationLibrary_ogf8y")
+}
+autoplay = "anim"
+
+[node name="player" parent="." instance=ExtResource("3_wri5b")]
+position = Vector2(314, -71)
+
+[node name="planet" parent="." instance=ExtResource("4_pnwr4")]
+position = Vector2(321, 486)
+scale = Vector2(7, 7)
+
+[node name="random_events" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="random_events" to="." method="_on_random_events_timeout"]

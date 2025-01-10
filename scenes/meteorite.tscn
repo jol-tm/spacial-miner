@@ -1,0 +1,81 @@
+[gd_scene load_steps=8 format=3 uid="uid://bphawu1g37m1a"]
+
+[ext_resource type="Script" path="res://scripts/meteorite.gd" id="1_m3ygu"]
+[ext_resource type="Texture2D" uid="uid://bp64dt3v1mm7j" path="res://sprites/meteorites/meteorite_4.png" id="2_2nbhp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x2l6l"]
+radius = 40.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jb15c"]
+radius = 35.0
+
+[sub_resource type="Gradient" id="Gradient_j6lls"]
+offsets = PackedFloat32Array(0, 0.571429, 1)
+colors = PackedColorArray(0.501961, 0.501961, 0.501961, 1, 0.784314, 0.784314, 0.784314, 1, 0.25098, 0.25098, 0.25098, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lu61o"]
+gradient = SubResource("Gradient_j6lls")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7c1rg"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 10.0
+spread = 180.0
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
+scale_min = 5.0
+scale_max = 15.0
+color = Color(0.501961, 0.501961, 0.501961, 1)
+color_ramp = SubResource("GradientTexture1D_lu61o")
+
+[node name="meteorite" type="RigidBody2D" groups=["meteorites"]]
+physics_interpolation_mode = 2
+z_index = 1
+gravity_scale = 0.0
+script = ExtResource("1_m3ygu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_2nbhp")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_x2l6l")
+debug_color = Color(0, 0.641218, 0.337814, 0.42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jb15c")
+
+[node name="shatter" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 12
+process_material = SubResource("ParticleProcessMaterial_7c1rg")
+one_shot = true
+
+[node name="hp_bar" type="Node2D" parent="."]
+visible = false
+position = Vector2(-14, 15)
+
+[node name="out" type="ColorRect" parent="hp_bar"]
+offset_left = -7.0
+offset_right = 35.0
+offset_bottom = 7.0
+color = Color(2.40654e-08, 9.62615e-08, 0.406719, 1)
+
+[node name="hp" type="ColorRect" parent="hp_bar"]
+offset_left = -6.0
+offset_top = 1.0
+offset_right = 34.0
+offset_bottom = 6.0
+color = Color(0.2, 1, 0.427451, 1)
+
+[node name="hptxt" type="Label" parent="."]
+texture_filter = 1
+offset_left = -14.0
+offset_top = 50.0
+offset_right = 14.0
+offset_bottom = 73.0
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

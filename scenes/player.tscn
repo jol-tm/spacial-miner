@@ -1,0 +1,222 @@
+[gd_scene load_steps=20 format=3 uid="uid://b47rei6tvwdn0"]
+
+[ext_resource type="Texture2D" uid="uid://ciuoy7aa2wmsj" path="res://sprites/player.png" id="1_70ii0"]
+[ext_resource type="Texture2D" uid="uid://b6e7t0a82acn2" path="res://sprites/jetpack.png" id="1_egwjp"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_r7ouf"]
+[ext_resource type="Texture2D" uid="uid://b5dvfd581g3q8" path="res://sprites/crosshair.png" id="4_eeaym"]
+[ext_resource type="Texture2D" uid="uid://dm00o5ier1w8" path="res://sprites/energy_ball.png" id="5_s15di"]
+[ext_resource type="Texture2D" uid="uid://muij454tmlyj" path="res://sprites/light_mask.png" id="6_byqc7"]
+[ext_resource type="Texture2D" uid="uid://cyfbpirey46yl" path="res://sprites/laser_cannon.png" id="7_5m7ap"]
+[ext_resource type="Texture2D" uid="uid://cxai2teaumm4c" path="res://sprites/arrow.png" id="8_sp5jh"]
+
+[sub_resource type="Gradient" id="Gradient_04um1"]
+offsets = PackedFloat32Array(0, 0.362637, 0.692308, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.162162, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_20o1w"]
+gradient = SubResource("Gradient_04um1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pxici"]
+particle_flag_disable_z = true
+direction = Vector3(0, 1, 0)
+spread = 180.0
+flatness = 1.0
+initial_velocity_min = 50.0
+initial_velocity_max = 50.0
+angular_velocity_min = -1.60933e-05
+angular_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
+scale_max = 15.0
+color_ramp = SubResource("GradientTexture1D_20o1w")
+turbulence_noise_strength = 0.0
+turbulence_noise_scale = 2.48
+
+[sub_resource type="Animation" id="Animation_al8ep"]
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_jjyrp"]
+resource_name = "pulse"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.266667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vxbdr"]
+_data = {
+"RESET": SubResource("Animation_al8ep"),
+"pulse": SubResource("Animation_jjyrp")
+}
+
+[sub_resource type="Animation" id="Animation_v81x1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_gwmen"]
+resource_name = "active"
+length = 0.2
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_frreg"]
+_data = {
+"RESET": SubResource("Animation_v81x1"),
+"active": SubResource("Animation_gwmen")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jcrw3"]
+size = Vector2(64, 70)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_80i8h"]
+radius = 167.505
+
+[node name="player" type="CharacterBody2D" groups=["player"]]
+z_index = 1
+script = ExtResource("1_r7ouf")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_bottom = 300
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0
+
+[node name="crosshair" type="Sprite2D" parent="."]
+z_index = 2
+texture_filter = 1
+position = Vector2(77, -5)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_eeaym")
+
+[node name="body" type="Node2D" parent="."]
+
+[node name="propulsion_left" type="GPUParticles2D" parent="body"]
+position = Vector2(-21, 35)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_pxici")
+
+[node name="propulsion_right" type="GPUParticles2D" parent="body"]
+position = Vector2(10, 35)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_pxici")
+
+[node name="jetpack" type="Sprite2D" parent="body"]
+texture_filter = 1
+position = Vector2(-6, 14)
+scale = Vector2(2.3, 2.3)
+texture = ExtResource("1_egwjp")
+
+[node name="astronaut" type="Sprite2D" parent="body"]
+texture_filter = 1
+scale = Vector2(7, 7)
+texture = ExtResource("1_70ii0")
+
+[node name="laser_cannon" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(1, 4.44)
+scale = Vector2(7, 7)
+
+[node name="RayCast2D" type="RayCast2D" parent="laser_cannon"]
+position = Vector2(0, 0.508571)
+scale = Vector2(0.142857, 0.142857)
+target_position = Vector2(1407, 0)
+
+[node name="laser" type="ColorRect" parent="laser_cannon"]
+offset_right = 200.0
+offset_bottom = 1.0
+pivot_offset = Vector2(0, 0.5)
+color = Color(0, 1, 0, 1)
+
+[node name="energy_ball" type="Sprite2D" parent="laser_cannon/laser"]
+modulate = Color(0, 1, 0, 1)
+texture_filter = 1
+position = Vector2(200.714, 0.508571)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("5_s15di")
+
+[node name="PointLight2D" type="PointLight2D" parent="laser_cannon/laser/energy_ball"]
+rotation = 3.14159
+color = Color(0, 1, 0, 1)
+texture = ExtResource("6_byqc7")
+texture_scale = 0.2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="laser_cannon/laser/energy_ball"]
+libraries = {
+"": SubResource("AnimationLibrary_vxbdr")
+}
+autoplay = "RESET"
+
+[node name="cannon" type="Sprite2D" parent="laser_cannon"]
+z_index = 1
+texture_filter = 1
+position = Vector2(1.913, 0.464)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_5m7ap")
+flip_h = true
+vframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="laser_cannon/cannon"]
+libraries = {
+"": SubResource("AnimationLibrary_frreg")
+}
+
+[node name="compass" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, 20)
+scale = Vector2(2, 2)
+texture = ExtResource("8_sp5jh")
+offset = Vector2(-5.96046e-08, -33.2143)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_jcrw3")
+
+[node name="magnet_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="magnet_area"]
+shape = SubResource("CircleShape2D_80i8h")
+
+[connection signal="area_entered" from="magnet_area" to="." method="_on_magnet_area_area_entered"]
+[connection signal="area_exited" from="magnet_area" to="." method="_on_magnet_area_area_exited"]

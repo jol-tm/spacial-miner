@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=3 uid="uid://cqvt47dw620r8"]
+
+[ext_resource type="Script" path="res://scripts/ore.gd" id="1_ca6yl"]
+[ext_resource type="Texture2D" uid="uid://xaq05al0wqj1" path="res://sprites/ores/ore_7.png" id="1_hmdii"]
+[ext_resource type="AudioStream" uid="uid://b22qaokoxvcta" path="res://sfx/pickup_ore.wav" id="3_1y3ln"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u1jfb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_thtqy"]
+radius = 11.0
+
+[sub_resource type="Animation" id="Animation_jgylr"]
+resource_name = "loot"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1.5, 1.5), Vector2(1e-05, 1e-05)]
+}
+
+[sub_resource type="Animation" id="Animation_66811"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1.5, 1.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rbpxn"]
+_data = {
+"RESET": SubResource("Animation_66811"),
+"loot": SubResource("Animation_jgylr")
+}
+
+[node name="ore" type="RigidBody2D" groups=["ores"]]
+z_index = 1
+gravity_scale = 0.0
+script = ExtResource("1_ca6yl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_hmdii")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_u1jfb")
+disabled = true
+
+[node name="loot_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="loot_area"]
+shape = SubResource("CircleShape2D_thtqy")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rbpxn")
+}
+
+[node name="get_looted" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_1y3ln")
+
+[connection signal="body_entered" from="loot_area" to="." method="_on_loot_area_body_entered"]
