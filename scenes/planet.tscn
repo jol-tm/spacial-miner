@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dpbpyxa8pe0uv"]
+[gd_scene load_steps=7 format=3 uid="uid://dpbpyxa8pe0uv"]
 
 [ext_resource type="Script" path="res://scripts/planet.gd" id="1_1fjt6"]
 [ext_resource type="Texture2D" uid="uid://b2k4qn2fnkxeu" path="res://sprites/planet.png" id="1_jhjn3"]
+[ext_resource type="Texture2D" uid="uid://dxnegmoluh1l4" path="res://sprites/ship.png" id="2_41gcn"]
+[ext_resource type="Texture2D" uid="uid://muij454tmlyj" path="res://sprites/light_mask.png" id="3_myuy4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3ts4j"]
 radius = 65.4973
@@ -10,9 +12,29 @@ radius = 65.4973
 radius = 136.015
 
 [node name="planet" type="CharacterBody2D"]
-z_index = 1
 texture_filter = 1
 script = ExtResource("1_1fjt6")
+
+[node name="ship" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(48, -67)
+rotation = 0.610865
+scale = Vector2(2, 2)
+texture = ExtResource("2_41gcn")
+
+[node name="PointLight2D2" type="PointLight2D" parent="ship"]
+position = Vector2(11.9593, -10.8155)
+color = Color(0, 1, 0, 1)
+energy = 1.5
+texture = ExtResource("3_myuy4")
+texture_scale = 0.05
+
+[node name="PointLight2D" type="PointLight2D" parent="ship"]
+position = Vector2(-12.5766, -10.1158)
+color = Color(0, 1, 0, 1)
+energy = 1.5
+texture = ExtResource("3_myuy4")
+texture_scale = 0.05
 
 [node name="flag" type="Node2D" parent="."]
 position = Vector2(-44, -63)
@@ -38,5 +60,9 @@ shape = SubResource("CircleShape2D_3ts4j")
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+visible = false
 position = Vector2(4, 9)
 shape = SubResource("CircleShape2D_vl7x8")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

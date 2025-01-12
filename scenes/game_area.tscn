@@ -65,7 +65,7 @@ libraries = {
 autoplay = "anim"
 
 [node name="player" parent="." instance=ExtResource("3_wri5b")]
-position = Vector2(314, -71)
+position = Vector2(314, -7)
 
 [node name="planet" parent="." instance=ExtResource("4_pnwr4")]
 position = Vector2(321, 486)

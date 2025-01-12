@@ -5,12 +5,12 @@ var type
 
 func _ready() -> void:
 	set_type()
-
+	angular_velocity = randi_range(-20, 20)
 func _physics_process(delta: float) -> void:
 	if magnet:
 		var player_pos = get_parent().get_node("player").global_position
 		var dir = (player_pos - global_position).normalized()
-		position += dir * 50 * delta
+		position += dir * 100 * delta
 
 func set_type():
 	var tex_path = $Sprite2D.texture.get_path()
@@ -38,5 +38,5 @@ func get_looted():
 	$get_looted.play()
 	await $AnimationPlayer.animation_finished
 	Global.inventory[type] += 1
-	print(Global.inventory)
+	
 	queue_free()
