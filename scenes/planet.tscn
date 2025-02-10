@@ -12,6 +12,7 @@ radius = 65.4973
 radius = 136.015
 
 [node name="planet" type="CharacterBody2D"]
+z_index = 1
 texture_filter = 1
 script = ExtResource("1_1fjt6")
 

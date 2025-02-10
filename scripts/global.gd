@@ -1,6 +1,6 @@
 extends Node
 
-var player_damage = 10
+var player_damage = 1
 var gravity = false
 var gravity_center
 var o2 = 100

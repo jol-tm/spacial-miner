@@ -7,7 +7,8 @@ var star_scene = preload("res://scenes/shooting_star.tscn")
 
 func _ready() -> void:
 	spawn_meteorite(100)
-
+	$random_events.start()
+	
 func _process(delta: float) -> void:
 	pass
 
@@ -20,10 +21,10 @@ func spawn_meteorite(amount):
 		add_child(meteorite)
 
 func _on_random_events_timeout() -> void:
+	$random_events.wait_time = randi_range(10, 15)
 	var screen = DisplayServer.window_get_size()
 	var x_pos = randi_range($player.global_position.x - screen.x / 2, $player.global_position.x + screen.x / 2)
 	var y_pos = randi_range($player.global_position.y - screen.y / 2 , $player.global_position.y + screen.y / 2)
 	var star = star_scene.instantiate()
 	star.position = Vector2(x_pos, y_pos)
 	add_child(star)
-	$random_events.wait_time = randi_range(10, 15)

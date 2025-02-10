@@ -57,15 +57,13 @@ func _physics_process(delta: float) -> void:
 		for i in Global.inventory:
 			Global.inventory[i] = 0
 		global_position = $"../planet".global_position
-	
-	# updating inventory
-	update_inventory()
+		update_inventory()
 	
 	# laser aiming
 	$crosshair.global_position = mouse_pos
 	$laser_cannon/RayCast2D.look_at(mouse_pos)
 	$laser_cannon.look_at(mouse_pos)
-	$laser_cannon/laser.size.x = 1000
+	#$laser_cannon/laser.size.x = 1000
 	if mouse_pos < global_position:
 		$laser_cannon/cannon.flip_v = true
 		$body/astronaut.flip_h = true
@@ -77,25 +75,29 @@ func _physics_process(delta: float) -> void:
 		
 	# laser activation
 	if Input.is_action_pressed("click"):
-		$laser_cannon/laser.visible = true
 		$crosshair.rotation_degrees += 10
 		if (!$laser_cannon/cannon/AnimationPlayer.is_playing()):
 			$laser_cannon/cannon/AnimationPlayer.play("active")
 			
 		if $laser_cannon/RayCast2D.is_colliding():
 			var collider = $laser_cannon/RayCast2D.get_collider()
-			var adjust_factor = 7
+			var col_point = $laser_cannon/RayCast2D.to_local($laser_cannon/RayCast2D.get_collision_point()) 
+			$laser_cannon/laser/laser_particles.emitting = true
+			$laser_cannon/laser/PointLight2D.enabled = true
+			$laser_cannon/laser/laser_particles.position = col_point
+			$laser_cannon/laser/PointLight2D.position = col_point
+			$laser_cannon/laser.points[1] = col_point
 			if collider.is_in_group("meteorites"):
-				var distance = (collider.global_position - global_position).length() / adjust_factor
-				$laser_cannon/laser.size.x = distance
-				$laser_cannon/laser/energy_ball.position.x = distance
 				collider.call("receive_damage")
 		else:
-			$laser_cannon/laser/energy_ball.position.x = 200
+			$laser_cannon/laser.points[1] = $laser_cannon/RayCast2D.target_position
+			
 	else:
 		var start_rotation = int($crosshair.rotation_degrees) % 360
-		$laser_cannon/laser.visible = false
 		$crosshair.rotation_degrees = lerp(start_rotation, 0, 0.1)
+		$laser_cannon/laser/laser_particles.emitting = false
+		$laser_cannon/laser/PointLight2D.enabled = false
+		$laser_cannon/laser.points[1] = Vector2.ZERO
 		$laser_cannon/cannon/AnimationPlayer.stop()
 
 func propulsion():
@@ -109,7 +111,7 @@ func slow_down():
 	$body/propulsion_right.emitting = false
 
 func consume_fuel():
-	cur_fuel -= 0.1
+	cur_fuel -= 0.3
 	$ui/fuel_bar/out/bar.size.x = cur_fuel / Global.fuel * 150
 
 func refuel_fuel():
@@ -131,6 +133,8 @@ func update_inventory():
 		var label = Label.new()
 		if Global.inventory[item] > 0:
 			$ui/inventory/ColorRect/GridContainer.add_child(label)
+			label.add_theme_font_override("font", load("res://font/PixelifySans-VariableFont_wght.ttf"))
+			label.add_theme_font_size_override("font_size", 20)
 			label.text = item + ": " + str(Global.inventory[item])
 			
 func _on_area_2d_body_entered(body: Node2D) -> void:

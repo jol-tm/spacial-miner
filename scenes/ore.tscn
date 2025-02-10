@@ -47,7 +47,7 @@ _data = {
 }
 
 [node name="ore" type="RigidBody2D" groups=["ores"]]
-z_index = 1
+z_index = 2
 gravity_scale = 0.0
 script = ExtResource("1_ca6yl")
 

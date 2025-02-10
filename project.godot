@@ -13,6 +13,7 @@ config_version=5
 config/name="Spacial Miner"
 run/main_scene="res://scenes/game_area.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]
@@ -23,7 +24,7 @@ Global="*res://scripts/global.gd"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
-window/size/mode=2
+window/size/mode=3
 
 [importer_defaults]
 

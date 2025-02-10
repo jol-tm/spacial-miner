@@ -77,7 +77,6 @@ func spawn_ores():
 		var pos_y = randi_range(global_position.y - 5, global_position.y + 5)
 		ore.position = Vector2(pos_x, pos_y)
 		ore.get_node("Sprite2D").texture = load("res://sprites/ores/ore_" + type + ".png")
-		ore.apply_impulse(Vector2(randi_range(-50, 50), randi_range(-50, 50)))
 		get_parent().add_child(ore)
 
 func _on_area_2d_body_entered(body: Node2D) -> void:

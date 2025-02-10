@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bb5pd0q7v2fhb"]
+[gd_scene load_steps=9 format=3 uid="uid://bb5pd0q7v2fhb"]
 
 [ext_resource type="Script" path="res://scripts/game_area.gd" id="1_d4ak3"]
 [ext_resource type="Texture2D" uid="uid://coix1e8eqiecj" path="res://sprites/bckg.png" id="2_c8f3y"]
 [ext_resource type="PackedScene" uid="uid://b47rei6tvwdn0" path="res://scenes/player.tscn" id="3_wri5b"]
 [ext_resource type="PackedScene" uid="uid://dpbpyxa8pe0uv" path="res://scenes/planet.tscn" id="4_pnwr4"]
+[ext_resource type="AudioStream" uid="uid://dccooena2yu5t" path="res://sfx/Pix - Space travel.mp3" id="5_x235a"]
 
 [sub_resource type="Animation" id="Animation_1wwba"]
 length = 0.001
@@ -72,6 +73,8 @@ position = Vector2(321, 486)
 scale = Vector2(7, 7)
 
 [node name="random_events" type="Timer" parent="."]
-autostart = true
+
+[node name="bckg_music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_x235a")
 
 [connection signal="timeout" from="random_events" to="." method="_on_random_events_timeout"]
